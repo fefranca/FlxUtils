@@ -21,9 +21,8 @@
 		private var _lineRight:uint;
 		private var _lineLeft:uint;
 		private var _lineBottom:uint;
-		//Tilemap boxes		
+		//Tilemap boxes
 		private var _showCollisionRects:Boolean;
-		private var _tileSize:Number;
 		private var _rectShape:Shape;
 		private var _collisionRects:Array;
 		
@@ -46,12 +45,12 @@
 		 * @desc Displays which tiles the player is colliding with.
 		 * (rendered along with the sprite, avoid rendering things on top of it :P)
 		 */
-		public function showCollisionRects(tileSize:Number):void {
-			_tileSize = tileSize;
-			_showCollisionRects = true;
-			_rectShape = new Shape();
-			_rectShape.graphics.drawRect(0, 0, _tileSize, _tileSize);
-			_collisionRects = new Array();
+		public function set showCollisionRects(bool:Boolean):void {
+			_showCollisionRects = bool;
+			if(_showCollisionRects){
+				_rectShape = new Shape();
+				_collisionRects = new Array();
+			}
 		}
 		
 		override public function render():void {
@@ -100,7 +99,7 @@
 			}
 			
 			if(_showCollisionRects){
-				_collisionRects.push(new Rectangle(Contact.x + FlxG.scroll.x, Contact.y + FlxG.scroll.y, _tileSize, _tileSize));
+				_collisionRects.push(new Rectangle(Contact.x + FlxG.scroll.x, Contact.y + FlxG.scroll.y, Contact.width, Contact.height));
 			}
 			return super.hitWall(Contact);
 		}
@@ -108,7 +107,7 @@
 		override public function hitFloor(Contact:FlxCore = null):Boolean {
 			_lineBottom = 0xff0000;
 			if(_showCollisionRects){
-				_collisionRects.push(new Rectangle(Contact.x + FlxG.scroll.x, Contact.y + FlxG.scroll.y, _tileSize, _tileSize));
+				_collisionRects.push(new Rectangle(Contact.x + FlxG.scroll.x, Contact.y + FlxG.scroll.y, Contact.width, Contact.height));
 			}
 			return super.hitFloor(Contact);
 		}
@@ -116,7 +115,7 @@
 		override public function hitCeiling(Contact:FlxCore = null):Boolean {
 			_lineTop = 0xff0000;
 			if(_showCollisionRects){
-				_collisionRects.push(new Rectangle(Contact.x + FlxG.scroll.x, Contact.y + FlxG.scroll.y, _tileSize, _tileSize));
+				_collisionRects.push(new Rectangle(Contact.x + FlxG.scroll.x, Contact.y + FlxG.scroll.y, Contact.width, Contact.height));
 			}
 			return super.hitCeiling(Contact);
 		}		

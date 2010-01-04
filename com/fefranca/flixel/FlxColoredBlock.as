@@ -8,6 +8,7 @@
 	
 	/**
 	 * Single-colored FlxBlock, used to create walls and floors, effects, etc.
+	 * Thanks Rybar for the original idea! ;)
 	 * 
 	 * Last updated: 09/12/2009
 	 * Tested on: Flixel 1.45

@@ -14,8 +14,6 @@
 	 * A vertical gradient background for Flixel.
 	 * Color properties (topColor and bottomColor) can be easily tweened for some awesome effects :)
 	 * 
-	 * Last updated: 10/12/2009
-	 * Tested on: Flixel 1.45
 	 * @author Fernando França
 	 */
 	public class FlxGradientBackground extends FlxCore
@@ -49,7 +47,12 @@
 			//0xff111111 is a little hack.
 			//It forces Flixel to always use the same BitmapData object to avoid filling up the cache.
 			//(Unique won't do it!)
-			_pixels = FlxG.createBitmap(width, height, 0xff111111, false);			
+			try {
+				_pixels = FlxG.createBitmap(width, height, 0xff111111, false);			
+			}
+			catch (e:ArgumentError) {
+				throw new Error("FlxUtils: Could not create the BitmapData object. Most likely your specified dimensions are too large. (FP9: 2880x2880, higher for FP10+)");
+			}
 			
 			_fillType = GradientType.LINEAR;
 			_colors = [TopColor, BottomColor];

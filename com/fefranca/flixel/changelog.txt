@@ -1,0 +1,12 @@
+﻿FlxUtils changelog
+-------------------------
+
+Last updated: 04/01/2010
+Tested on Flixel 1.51
+
+-------------------------
+
+04/01/2010
+- Created changelog.txt and moved compatibility information there
+- Added some error checking to FlxGradientBitmap
+- Changed FlxTilemapExt's only function name to collidePoint instead of overriding overlapsPoint

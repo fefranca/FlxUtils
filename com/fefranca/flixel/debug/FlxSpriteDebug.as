@@ -9,8 +9,6 @@
 	/**
 	 * Extension to FlxSprite that displays the current sprite's collision box and (optionally) collisions to the tilemap.
 	 * 
-	 * Last updated: 15/12/2009
-	 * Tested on: Flixel 1.45
 	 * @author Fernando França
 	 */
 	public class FlxSpriteDebug extends FlxSprite

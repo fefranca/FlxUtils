@@ -22,6 +22,7 @@
 		private var _pixels:BitmapData;
 		private var _p:Point;
 		private var _r:Rectangle;
+		private var _updateBuffer:Boolean;
 		
 		//Gradient properties
 		private var _fillType:String;
@@ -62,11 +63,12 @@
 			_spreadMethod = SpreadMethod.PAD;
 			
 			preRender();
+			_updateBuffer = false;
 		}
 		
 		public function set topColor(color:uint):void {
 			_colors[0] = color;
-			preRender();
+			_updateBuffer = true;
 		}
 		
 		public function get topColor():uint {
@@ -75,14 +77,14 @@
 		
 		public function set bottomColor(color:uint):void {
 			_colors[1] = color;
-			preRender();
+			_updateBuffer = true;
 		}
 		
 		public function get bottomColor():uint {
 			return _colors[1];
 		}
 		
-		//@desc Pre-renders the background for performance reasons
+		//@desc Pre-renders the background for better performance
 		private function preRender():void {
 			_m.createGradientBox(width, height, Math.PI / 2);
 			_shape.graphics.clear();
@@ -90,12 +92,17 @@
 			_shape.graphics.drawRect(0, 0, width, height);
 			_shape.graphics.endFill();
 			_pixels.draw(_shape);
+			_updateBuffer = false;
 		}
 		
 		override public function render():void
 		{
 			if(!visible)
 				return;
+			
+			if (_updateBuffer) {
+				preRender();
+			}
 				
 			FlxG.buffer.copyPixels(_pixels, _r, _p, null, null, true);
 		}		

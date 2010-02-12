@@ -13,6 +13,8 @@
 	/**
 	 * A vertical gradient background for Flixel.
 	 * Color properties (topColor and bottomColor) can be easily tweened for some awesome effects :)
+	 * Alpha properties (topAlpha and bottomAlpha) are also available! (dedicated to cai and his bacon)
+	 * Now supports multiple instances
 	 * 
 	 * @author Fernando França
 	 */
@@ -32,32 +34,30 @@
 		private var _m:Matrix;
 		private var _spreadMethod:String;
 		
-		public function FlxGradientBackground(X:int = 0, Y:int = 0, Width:uint = 0, Height:uint = 0, TopColor:uint = 0, BottomColor:uint = 0) 
+		public function FlxGradientBackground(x:int = 0, y:int = 0, width:Number = 0, height:Number = 0, topColor:Number = 0, bottomColor:Number = 0, topAlpha:Number = 1, bottomAlpha:Number = 1) 
 		{
 			super();
-			last.x = x = X;
-			last.y = y = Y;
-			width = Width;
-			height = Height;
+			this.last.x = this.x = x;
+			this.last.y = this.y = y;
+			this.width = width;
+			this.height = height;
 			
 			_p = new Point();
 			_r = new Rectangle(x, y, width, height);
 			
 			_shape = new Shape();
 			
-			//0xff111111 is a little hack.
-			//It forces Flixel to always use the same BitmapData object to avoid filling up the cache.
-			//(Unique won't do it!)
+			//I decided to change Unique to true, in order to allow multiple FlxGradientBackgrounds!
 			try {
-				_pixels = FlxG.createBitmap(width, height, 0xff111111, false);			
+				_pixels = FlxG.createBitmap(width, height, 0xff111111, true);			
 			}
 			catch (e:ArgumentError) {
 				throw new Error("FlxUtils: Could not create the BitmapData object. Most likely your specified dimensions are too large. (FP9: 2880x2880, higher for FP10+)");
 			}
 			
 			_fillType = GradientType.LINEAR;
-			_colors = [TopColor, BottomColor];
-			_alphas = [100, 100];
+			_colors = [topColor, bottomColor];
+			_alphas = [topAlpha, bottomAlpha];
 			_ratios = [0, 255];
 			_m = new Matrix();
 			_spreadMethod = SpreadMethod.PAD;
@@ -66,22 +66,40 @@
 			_updateBuffer = false;
 		}
 		
-		public function set topColor(color:uint):void {
+		public function set topColor(color:Number):void {
 			_colors[0] = color;
 			_updateBuffer = true;
 		}
 		
-		public function get topColor():uint {
+		public function get topColor():Number {
 			return _colors[0];
 		}
 		
-		public function set bottomColor(color:uint):void {
+		public function set bottomColor(color:Number):void {
 			_colors[1] = color;
 			_updateBuffer = true;
 		}
 		
-		public function get bottomColor():uint {
+		public function get bottomColor():Number {
 			return _colors[1];
+		}
+		
+		public function set topAlpha(value:Number):void {
+			_alphas[0] = value;
+			_updateBuffer = true;
+		}
+		
+		public function get topAlpha():Number {
+			return _alphas[0];
+		}
+		
+		public function set bottomAlpha(value:Number):void {
+			_alphas[1] = value;
+			_updateBuffer = true;
+		}
+		
+		public function get bottomAlpha():Number {
+			return _alphas[1];
 		}
 		
 		//@desc Pre-renders the background for better performance
@@ -91,6 +109,7 @@
 			_shape.graphics.beginGradientFill(_fillType, _colors, _alphas, _ratios, _m, _spreadMethod);
 			_shape.graphics.drawRect(0, 0, width, height);
 			_shape.graphics.endFill();
+			_pixels.fillRect(_r, 0x00000000);
 			_pixels.draw(_shape);
 			_updateBuffer = false;
 		}
